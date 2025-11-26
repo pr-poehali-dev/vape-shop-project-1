@@ -3,12 +3,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 
 interface VapeDevice {
   id: number;
@@ -178,12 +172,12 @@ export default function Index() {
                 </div>
                 <div className="flex gap-2">
                   <Button
-                    onClick={() => setShowComparison(true)}
+                    onClick={() => setShowComparison(!showComparison)}
                     disabled={compareList.length < 2}
                     className="neon-glow"
                   >
                     <Icon name="BarChart3" size={20} className="mr-2" />
-                    Сравнить
+                    {showComparison ? 'Скрыть' : 'Сравнить'}
                   </Button>
                   <Button
                     variant="outline"
@@ -192,6 +186,78 @@ export default function Index() {
                     Очистить
                   </Button>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {showComparison && compareList.length >= 2 && (
+            <div className="mb-8 bg-card border border-primary/30 rounded-lg p-6 animate-slide-up">
+              <h3 className="text-3xl font-orbitron neon-text mb-6">Сравнение устройств</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {compareList.map((device) => (
+                  <Card key={device.id} className="border-primary/30">
+                    <CardContent className="p-4">
+                      <img
+                        src={device.image}
+                        alt={device.name}
+                        className="w-full h-32 object-cover rounded-lg mb-3"
+                      />
+                      <h4 className="font-bold text-lg mb-3 text-primary font-orbitron">
+                        {device.name}
+                      </h4>
+                      
+                      <div className="space-y-3 text-sm">
+                        <div className="border-b border-border pb-2">
+                          <div className="text-muted-foreground mb-1">Цена</div>
+                          <div className="font-bold text-lg">{device.price.toLocaleString()} ₽</div>
+                        </div>
+                        
+                        <div className="border-b border-border pb-2">
+                          <div className="text-muted-foreground mb-1 flex items-center gap-1">
+                            <Icon name="Battery" size={14} />
+                            Батарея
+                          </div>
+                          <div className="font-semibold">{device.battery}</div>
+                        </div>
+                        
+                        <div className="border-b border-border pb-2">
+                          <div className="text-muted-foreground mb-1 flex items-center gap-1">
+                            <Icon name="Zap" size={14} />
+                            Мощность
+                          </div>
+                          <div className="font-semibold">{device.power}</div>
+                        </div>
+                        
+                        <div className="border-b border-border pb-2">
+                          <div className="text-muted-foreground mb-1 flex items-center gap-1">
+                            <Icon name="Droplet" size={14} />
+                            Объём бака
+                          </div>
+                          <div className="font-semibold">{device.capacity}</div>
+                        </div>
+                        
+                        <div>
+                          <div className="text-muted-foreground mb-1 flex items-center gap-1">
+                            <Icon name="Settings" size={14} />
+                            Сопротивление
+                          </div>
+                          <div className="font-semibold">{device.resistance}</div>
+                        </div>
+                      </div>
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full mt-4"
+                        onClick={() => toggleCompare(device)}
+                      >
+                        <Icon name="X" size={16} className="mr-2" />
+                        Убрать
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </div>
           )}
@@ -272,88 +338,6 @@ export default function Index() {
           </div>
         </div>
       </div>
-
-      <Dialog open={showComparison} onOpenChange={setShowComparison}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-3xl font-orbitron neon-text">
-              Сравнение устройств
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {compareList.map((device) => (
-              <Card key={device.id} className="border-primary/30">
-                <CardContent className="p-4">
-                  <img
-                    src={device.image}
-                    alt={device.name}
-                    className="w-full h-32 object-cover rounded-lg mb-3"
-                  />
-                  <h4 className="font-bold text-lg mb-3 text-primary font-orbitron">
-                    {device.name}
-                  </h4>
-                  
-                  <div className="space-y-3 text-sm">
-                    <div className="border-b border-border pb-2">
-                      <div className="text-muted-foreground mb-1">Цена</div>
-                      <div className="font-bold text-lg">{device.price.toLocaleString()} ₽</div>
-                    </div>
-                    
-                    <div className="border-b border-border pb-2">
-                      <div className="text-muted-foreground mb-1 flex items-center gap-1">
-                        <Icon name="Battery" size={14} />
-                        Батарея
-                      </div>
-                      <div className="font-semibold">{device.battery}</div>
-                    </div>
-                    
-                    <div className="border-b border-border pb-2">
-                      <div className="text-muted-foreground mb-1 flex items-center gap-1">
-                        <Icon name="Zap" size={14} />
-                        Мощность
-                      </div>
-                      <div className="font-semibold">{device.power}</div>
-                    </div>
-                    
-                    <div className="border-b border-border pb-2">
-                      <div className="text-muted-foreground mb-1 flex items-center gap-1">
-                        <Icon name="Droplet" size={14} />
-                        Объём бака
-                      </div>
-                      <div className="font-semibold">{device.capacity}</div>
-                    </div>
-                    
-                    <div>
-                      <div className="text-muted-foreground mb-1 flex items-center gap-1">
-                        <Icon name="Settings" size={14} />
-                        Сопротивление
-                      </div>
-                      <div className="font-semibold">{device.resistance}</div>
-                    </div>
-                  </div>
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full mt-4"
-                    onClick={() => toggleCompare(device)}
-                  >
-                    <Icon name="X" size={16} className="mr-2" />
-                    Убрать
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          <div className="mt-6 flex justify-end">
-            <Button onClick={() => setShowComparison(false)}>
-              Закрыть
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <footer className="border-t border-primary/20 mt-16 py-8 backdrop-blur-sm">
         <div className="container mx-auto px-4 text-center">
